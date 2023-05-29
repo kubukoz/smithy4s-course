@@ -10,6 +10,7 @@ Useful resources:
 - [Smithy4s website](https://disneystreaming.github.io/smithy4s/)
 - Smithy4s chat on Discord: [![Discord](https://img.shields.io/discord/1045676621761347615.svg?label=&logo=discord&logoColor=ffffff&color=404244&labelColor=6A7EC2)](https://discord.gg/wvVga94s8r)
 - [Recommended Smithy extension for VS Code](https://marketplace.visualstudio.com/items?itemName=disneystreaming.smithy)
+- [Smithy4s learning resources](https://disneystreaming.github.io/smithy4s/docs/learning-resources)
 - [Alloy](https://github.com/disneystreaming/alloy/)
 - [Smithy-translate](https://github.com/disneystreaming/smithy-translate/)
 - [Smithy Playground](https://github.com/kubukoz/smithy-playground)
