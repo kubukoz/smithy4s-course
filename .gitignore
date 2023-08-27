@@ -1,2 +1,3 @@
 # smithy-build outputs
 */build/
+**/.smithy.lsp.log
