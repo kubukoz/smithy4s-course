@@ -1,5 +1,10 @@
 $version: "2"
 
+metadata suppressions = [{
+    id: "UnreferencedShape"
+    namespace: "aggregates"
+    message: "This is a tutorial"
+}]
 namespace aggregates
 
 use simpleshapes#MyString
