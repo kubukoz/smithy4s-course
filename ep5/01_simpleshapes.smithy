@@ -3,7 +3,7 @@ $version: "2"
 metadata suppressions = [{
     id: "UnreferencedShape"
     namespace: "simpleshapes"
-    message: "This is a tutorial"
+    reason: "This is a tutorial"
 }]
 namespace simpleshapes
 
