@@ -2,7 +2,7 @@ $version: "2"
 
 namespace services
 
-// Service shapes. These compose other shapes into services that can be used to run some actions.
+// Service types. These compose other shapes into services that can be used to run some actions.
 // Notably, unlike aggregate shapes they have no members - they have "properties" instead.
 // https://smithy.io/2.0/spec/service-types.html
 // 
