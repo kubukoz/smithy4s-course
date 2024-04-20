@@ -1,7 +1,7 @@
 val root = project
   .in(file("."))
   .settings(
-    scalaVersion := "2.13.13",
+    scalaVersion := "3.3.3",
     libraryDependencies ++= Seq(
       "com.disneystreaming.smithy4s" %% "smithy4s-core" % smithy4sVersion.value,
       "com.disneystreaming.smithy4s" %% "smithy4s-http4s" % smithy4sVersion.value,
