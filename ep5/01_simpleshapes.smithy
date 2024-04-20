@@ -7,6 +7,7 @@ metadata suppressions = [{
 }]
 namespace simpleshapes
 
+use alloy#openEnum
 // 
 // Simple shapes. These are "flat" shapes, i.e. they don't include any others.
 // https://smithy.io/2.0/spec/simple-types.html
@@ -14,6 +15,7 @@ namespace simpleshapes
 // 
 /// For serialization purposes, equivalent to any other string.
 /// Useful for type safety or attaching traits to all references of this shape.
+
 @length(min: 1)
 string MyString
 
@@ -48,8 +50,17 @@ document MyDocument
 /// Enums are strings limited to a set to 1..N values.
 // 
 // Note: the Smithy spec considers enums as open, meaning that consumers should be able to handle unknown values.
-// Not all implementations of Smithy support that (by default or at all - e.g. smithy4s supports it starting from the 0.18 release).
+// Smithy4s considers enum closed by default.
 enum MyEnum {
+    HELLO
+    GOODBYE
+    /// Custom values can be specified.
+    GOOD_AFTERNOON = "good afternoon"
+}
+
+// Smithy4s supports open enums starting from 0.18, but it requires a trait.
+@openEnum
+enum MyOpenEnum {
     HELLO
     GOODBYE
     /// Custom values can be specified.
