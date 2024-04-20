@@ -49,10 +49,15 @@ list MyStructures {
 
 /// Other kinds of sequences are supported, too.
 /// In order to get a "Set" shape, you can use the `@uniqueItems` trait.
-/// There's also `@vector` and `@indexedSeq` for other kinds of sequences.
+/// In smithy4s, there's also `@vector` and `@indexedSeq` for other kinds of sequences.
 @uniqueItems
 list MyUniqueStructures {
     member: MyStructure
+}
+
+map StringToNumber {
+    key: String
+    value: Integer
 }
 
 /// Aggregate shapes can be (also mutually) recursive.
