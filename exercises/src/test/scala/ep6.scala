@@ -6,7 +6,7 @@ import weaver.*
 
 object ep6 extends setup.Ep6Exercises {
 
-  exercise("Exercise 1") {
+  exercise(1) {
     //
     // Find out which operation is being called here,
     // and see what needs to be done to its parameters to make the test pass.
@@ -17,7 +17,7 @@ object ep6 extends setup.Ep6Exercises {
     assertSuccessful(GET(uri"/students/123"))
   }
 
-  exercise("Exercise 2") {
+  exercise(2) {
     // Make a valid call to the operation CreateStudent.
     // Pick your favorite movie/game character as the student's name.
     // Let me know who it was in the YouTube comments ;)
@@ -38,7 +38,7 @@ object ep6 extends setup.Ep6Exercises {
     assertSuccessful(request)
   }
 
-  exercise("Exercise 3") {
+  exercise(3) {
     // There's a subtle discrepancy between the request in this test, and the service definition.
     // What is it? Update the Smithy specification to match the test.
     // Do not modify this test.
@@ -49,7 +49,7 @@ object ep6 extends setup.Ep6Exercises {
     )
   }
 
-  exercise("Exercise 4") {
+  exercise(4) {
     // Another discrepancy: this test should pass, but doesn't: the spec for the operation is slightly wrong.
     // Change it so that the test passes.
 

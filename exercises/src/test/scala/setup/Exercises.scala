@@ -15,7 +15,7 @@ import org.http4s.implicits.*
 import smithy4s.Document
 import smithy4s.Document.DArray
 import smithy4s.Document.DObject
-import smithy4s.Document.DString
+import smithy4s.Endpoint
 import smithy4s.Service
 import smithy4s.ShapeId
 import smithy4s.http4s.SimpleRestJsonBuilder
@@ -26,89 +26,61 @@ import smithy4s.schema.Schema.StructSchema
 import specs.ep6._
 import weaver.*
 
-import scala.util.Random
+private[setup] object ExerciseAPI {
+  extension [A](e: Either[Throwable, A]) def orThrow: A = e.fold(throw _, identity)
 
-trait Ep6Exercises extends Exercises {
+  type PartialImpl = PartialFunction[String, Document => Document]
 
-  def makeDetails(exerciseName: String): PartialImpl =
-    exerciseName match {
-      case "Exercise 1" => { case StudentServiceOperation.GetStudent.schema.id.name =>
-        input => {
-          val paramValue =
-            input match {
-              case DObject(value) if value.sizeIs == 1 =>
-                value.head._2 match {
-                  case DString(value) => value
-                  case other =>
-                    sys.error(
-                      s"Expected a string, but got $other (${GetStudentInput.schema.firstFieldId})"
-                    )
-                }
-
-              case DObject(v) =>
-                sys.error(
-                  s"The operation had ${v.size} inputs, but it should have had 1! Did you cheat? ;)"
-                )
-
-              case _ => sys.error("shouldn't be possible: operation inputs are structs")
-            }
-
-          Document.encode(GetStudentOutput(name = "Output for input " + paramValue))
-        }
-      }
-
-      case "Exercise 2" => { case StudentServiceOperation.CreateStudent.schema.id.name =>
-        input =>
-          Document.encode(
-            CreateStudentOutput(
-              id = Random.nextInt().show,
-              name = input.decode[CreateStudentInput].orThrow.name,
-            )
-          )
-      }
-
-      case "Exercise 3" => { case StudentServiceOperation.ListStudents.schema.id.name =>
-        input =>
-          val realLimit = input
-            .decode[ListStudentsInput]
-            .toTry
-            .get
-            .maxStudents
-            .getOrElse(20)
-
-          val students = ListStudentsOutput(
-            List.fill(realLimit)(Student(name = s"Student ${Random.nextInt()}"))
-          )
-
-          Document.encode(students)
-      }
-
-      case "Exercise 4" => { case StudentServiceOperation.ListClasses.schema.id.name =>
-        _ =>
-          Document.encode(
-            ListClassesOutput(
-              List(Class("Chemistry", "Maya"), Class("Music", "Eve"))
-            )
-          )
-      }
+  def toDynamicIO[A: Schema, B: Schema](
+    f: A => B
+  ): Document => Document =
+    input => {
+      val inputDecoded = input.decode[A].orThrow
+      Document.encode(f(inputDecoded))
     }
+
+  def toDynamicOutputOnly[B: Schema](f: Document => B): Document => Document =
+    input => Document.encode(f(input))
+
+  def forOperation[Op[_, _, _, _, _], I, O](
+    op: Endpoint[Op, I, ?, O, ?, ?]
+  )(
+    f: Document => Document
+  ): PartialImpl = {
+    case n if n == op.name => f
+  }
+
+  def forStaticOperation[Op[_, _, _, _, _], I, O](op: Endpoint[Op, I, ?, O, ?, ?])(f: I => O)
+    : PartialImpl =
+    forOperation(op) {
+      toDynamicIO(f)(
+        using op.input,
+        op.output,
+      )
+    }
+
+  def makeExercises(impls: PartialImpl*): Int => PartialImpl =
+    // exercise numbers start at 1, but indices start at 0
+    impls.compose(_ - 1)
 
 }
 
 trait Exercises extends SimpleIOSuite {
 
-  type PartialImpl = PartialFunction[String, Document => Document]
-  case class Ctx private[Exercises] (val exerciseName: String)
+  import ExerciseAPI.*
 
-  def makeDetails(exerciseName: String): PartialImpl
+  case class Ctx private[Exercises] (val exerciseName: ExerciseName)
+
+  type ExerciseName = Int
+  val exercises: ExerciseName => PartialImpl
 
   def exercise(
-    name: TestName
+    name: ExerciseName
   )(
     f: Ctx ?=> IO[Expectations]
   ): Unit =
-    test(name) {
-      given Ctx = Ctx(name.name)
+    test(s"Exercise $name") {
+      given Ctx = Ctx(name)
       f
     }
 
@@ -129,7 +101,7 @@ trait Exercises extends SimpleIOSuite {
         .routes(
           makeFakeImpl(
             StudentService,
-            makeDetails(ctx.exerciseName),
+            exercises(ctx.exerciseName),
           )
         )
         .make
@@ -259,8 +231,6 @@ trait Exercises extends SimpleIOSuite {
 
     def firstFieldId: ShapeId = structFields.head.schema.shapeId
   }
-
-  extension [A](e: Either[Throwable, A]) def orThrow: A = e.fold(throw _, identity)
 
   private def makeFakeImpl[Alg[_[_, _, _, _, _]]](
     service: Service[Alg],
