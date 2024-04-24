@@ -9,6 +9,78 @@ import weaver.*
 
 import scala.util.Random
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+// This is not the droid you're looking for.
+// Go to "object ep6" instead.
+//
+// Spoilers inside!
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 trait Ep6Exercises extends Exercises {
   import ExerciseAPI.*
 

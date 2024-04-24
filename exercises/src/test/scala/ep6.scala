@@ -19,7 +19,7 @@ object ep6 extends setup.Ep6Exercises {
     assertSuccessful(GET(uri"/students/123"))
   }
 
-  // TODO: Break this test by changing the body fields, and the URL.
+  // TODO: Break this test by changing the body fields, header, and the URL.
   exercise(2) {
 
     // Make a valid call to the operation CreateStudent.
@@ -30,12 +30,14 @@ object ep6 extends setup.Ep6Exercises {
     // but you can also try to deduce the input shape from the error response.
 
     // You can modify code below this line.
-    val request = POST(uri"/students").withEntity(
-      json("""
-      {
-        "name": "JoJo"
-      }
-      """)
+    val request = POST(
+      body = json("""
+                    {
+                      "name": "JoJo"
+                    }
+                    """),
+      uri = uri"/students",
+      headers = "MY-USER-ID" -> "100",
     )
     // You can modify code above this line.
 
@@ -48,9 +50,12 @@ object ep6 extends setup.Ep6Exercises {
     // There's a subtle discrepancy between the request in this test, and the service definition.
     // What is it? Update the Smithy specification to match the test.
     // Do not modify this test.
+    //
+    // Bonus exercise: if you get this one right, you can try to make the test pass by changing the test instead
+    // (use test 2 for inspiration).
 
     assert(
-      successful(GET(uri"/students?limit=10")) &&
+      successful(POST(uri = uri"/students/search?limit=10")) &&
         responseBody.asObject.key("students").asArray.sizeIs(10)
     )
   }

@@ -33,6 +33,9 @@ operation CreateStudent {
     input := {
         @required
         name: String
+        @required
+        @httpHeader("MY-USER-ID")
+        userId: String
     }
     output := {
         @required
@@ -42,8 +45,7 @@ operation CreateStudent {
     }
 }
 
-@http(method: "GET", uri: "/students")
-@readonly
+@http(method: "POST", uri: "/students/search")
 operation ListStudents {
     input := {
         @httpQuery("limit")
