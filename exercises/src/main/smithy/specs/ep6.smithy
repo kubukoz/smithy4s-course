@@ -11,6 +11,7 @@ service StudentService {
         CreateStudent
         ListStudents
         ListClasses
+        ListTeachers
     ]
 }
 
@@ -85,4 +86,24 @@ structure Class {
     name: String
     @required
     teacher: String
+}
+
+@http(method: "GET", uri: "/teachers")
+@readonly
+operation ListTeachers {
+    output := {
+        @required
+        @httpPayload
+        teachers: Teachers
+    }
+}
+
+list Teachers {
+    member: Teacher
+}
+
+structure Teacher {
+    @jsonName("teacherName")
+    @required
+    name: String
 }

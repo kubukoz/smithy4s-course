@@ -72,4 +72,21 @@ object ep6 extends setup.Ep6Exercises {
     )
   }
 
+  exercise(5) {
+
+    // In this test, the problem is in the format of the output.
+    // The Smithy spec is correct, but the code is not.
+
+    assert(
+      successful(GET(uri"/teachers")) &&
+        // You can modify code below this line.
+        responseBody
+          .asArray(0)
+          .asObject
+          .key("teacherName")
+          .isString
+        // You can modify code above this line.
+    )
+  }
+
 }

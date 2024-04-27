@@ -122,12 +122,10 @@ trait Exercises extends SimpleIOSuite {
 
   extension (doc: Document) {
 
-    def asObject(
-      using r: RichResponse
-    ): Map[String, Document] =
+    def asObject: Map[String, Document] =
       doc.match {
         case DObject(m) => m
-        case _          => sys.error("expected object, got: " + r.body)
+        case _ => sys.error("expected object, got: " + Json.writeDocumentAsBlob(doc).toUTF8String)
       }
 
     def asArray(
@@ -135,8 +133,14 @@ trait Exercises extends SimpleIOSuite {
     ): IndexedSeq[Document] =
       doc.match {
         case DArray(value) => value
-        case _             => sys.error("expected array, got: " + r.body)
+        case _ => sys.error("expected array, got: " + Json.writeDocumentAsBlob(doc).toUTF8String)
       }
+
+    def isString(
+      using RichResponse
+    ): CustomAssertion[RichResponse] = CustomAssertion.just {
+      assert.same("String", doc.name)
+    }
 
   }
 
@@ -146,10 +150,8 @@ trait Exercises extends SimpleIOSuite {
       value: Int
     )(
       using RichResponse
-    ): CustomAssertion[RichResponse] = CustomAssertion.Ass(
-      IO(
-        (assert.same(seq.size, value), summon[RichResponse])
-      )
+    ): CustomAssertion[RichResponse] = CustomAssertion.just(
+      assert.same(value, seq.size)
     )
 
   extension [A](map: Map[String, A])
@@ -188,6 +190,22 @@ trait Exercises extends SimpleIOSuite {
               second(_).evalFull
             }
       }
+
+  }
+
+  object CustomAssertion {
+
+    def just[E](
+      check: Expectations
+    )(
+      using E
+    ): CustomAssertion[E] = justIO(IO.pure(check))
+
+    def justIO[E](
+      check: IO[Expectations]
+    )(
+      using E
+    ): CustomAssertion[E] = Ass(check.tupleRight(summon[E]))
 
   }
 

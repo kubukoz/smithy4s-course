@@ -127,6 +127,11 @@ trait Ep6Exercises extends Exercises {
         List(Class("Chemistry", "Maya"), Class("Music", "Eve"))
       )
     },
+    forStaticOperation(StudentServiceOperation.ListTeachers) { _ =>
+      ListTeachersOutput(
+        List(Teacher("Maya"), Teacher("Eve"))
+      )
+    },
   )
 
 }
