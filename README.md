@@ -14,4 +14,5 @@ Useful resources:
 - [Alloy](https://github.com/disneystreaming/alloy/)
 - [Smithy-translate](https://github.com/disneystreaming/smithy-translate/)
 - [Smithy Playground](https://github.com/kubukoz/smithy-playground)
+- [Awesome Smithy](https://github.com/smithy-lang/awesome-smithy)
 - [My links (contact etc.)](https://linktr.ee/kubukoz)
